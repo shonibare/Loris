@@ -1,3 +1,4 @@
+import {createRoot} from 'react-dom/client';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Loader from 'Loader';
@@ -166,6 +167,11 @@ class ImagingBrowserIndex extends Component {
         type: 'multiselect',
         options: options.pendingNew,
       }},
+      {label: 'Entity Type', show: false, filter: {
+       name: 'entityType',
+       type: 'multiselect',
+       option: options.entityType,
+      }},
     ];
     /**
      * Adding columns based on the Imaging Browser Tabulated Scan Types
@@ -193,10 +199,10 @@ ImagingBrowserIndex.propTypes = {
 };
 
 window.addEventListener('load', () => {
-  ReactDOM.render(
+  const root = createRoot(document.getElementById('lorisworkspace'));
+  root.render(
     <ImagingBrowserIndex
       dataURL={`${loris.BaseURL}/imaging_browser/?format=json`}
-    />,
-    document.getElementById('lorisworkspace')
+    />
   );
 });

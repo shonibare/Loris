@@ -84,31 +84,23 @@ class ValidateIDs extends \NDB_Page
                 );
         }
 
-        // Return "0" or "1" based on whether it exists or not.
-        // We always return a 200 error code and not a 404, because
-        // even if the CandID doesn't exist or match, the validateids
-        // endpoint still exists and has a valid response.
         try {
-            $exists = \Candidate::candidateExists(
-                new CandID(strval($gets['CandID'])),
-                $gets['PSCID']
-            ) ? "1" : "0";
-            return (new \LORIS\Http\Response())
+                // Return "0" or "1" based on whether it exists or not.
+                // We always return a 200 error code and not a 404, because
+                // even if the CandID doesn't exist or match, the validateids
+                // endpoint still exists and has a valid response.
+                $exists = \Candidate::candidateExists(
+                    new CandID($gets['CandID']),
+                    $gets['PSCID']
+                ) ? "1" : "0";
+        } catch (\Exception $e) { 
+               $exists = "0";
+        }
+
+                return (new \LORIS\Http\Response())
                 ->withStatus(200)
                 ->withHeader("Content-Type", "text/plain")
                 ->withBody(new \LORIS\Http\StringStream($exists));
-        } catch (LorisException $e)
-        {
-            return (new \LORIS\Http\Response())
-            ->withStatus(200)
-            ->withHeader("Content-Type", "text/plain")
-            ->withBody(new \LORIS\Http\StringStream('0'));
-        } finally {
-            return (new \LORIS\Http\Response())
-            ->withStatus(200)
-            ->withHeader("Content-Type", "text/plain")
-            ->withBody(new \LORIS\Http\StringStream('0'));
-        }
         
     }
 }
